@@ -35,6 +35,13 @@ export default function Header() {
     { href: '/blog', label: 'BLOG' },
   ];
 
+  const dashboardLinks = user ? [
+    { href: '/dashboard', label: 'DASHBOARD' },
+    { href: '/dashboard/contacts', label: 'CONTACTS' },
+  ] : [];
+
+  const allLinks = [...navLinks, ...dashboardLinks];
+
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
     return pathname.startsWith(href);
@@ -170,7 +177,7 @@ export default function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden pt-6 pb-4 border-t border-[#2A2A2A] mt-6">
             <div className="flex flex-col gap-6">
-              {navLinks.map((link) => (
+              {allLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}

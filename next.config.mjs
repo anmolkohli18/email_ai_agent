@@ -8,8 +8,6 @@ const nextConfig = {
     });
     return config;
   },
-  // Enable static export optimization
-  output: 'standalone',
 };
 
 export default nextConfig;
