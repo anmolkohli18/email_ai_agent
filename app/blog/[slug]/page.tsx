@@ -61,9 +61,9 @@ export default async function BlogPostPage({ params }: PageProps) {
   const toc = generateTableOfContents(content);
 
   const categoryColors = {
-    AI: 'bg-[#7C3AED] text-white',
-    Business: 'bg-[#10B981] text-white',
-    Technology: 'bg-[#F59E0B] text-white',
+    Personalization: 'bg-[#7C3AED] text-white',
+    Automation: 'bg-[#10B981] text-white',
+    Strategy: 'bg-[#F59E0B] text-white',
   };
 
   return (

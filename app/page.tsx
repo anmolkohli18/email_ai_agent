@@ -51,7 +51,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-3xl p-12 lg:p-16">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 tracking-tight">
-              Generic emails don't work anymore.
+              Generic emails don&apos;t work anymore.
             </h2>
             <p className="text-lg text-neutral-400 leading-relaxed max-w-3xl">
               Your prospects get hundreds of emails daily. Template-based outreach gets ignored. 
