@@ -1,0 +1,66 @@
+---
+description: Next.js 15 App Router, React 19, and Tailwind CSS standards
+globs: ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}", "lib/**/*.ts", "types/**/*.ts"]
+alwaysApply: true
+---
+
+# Cursor Rules - Next.js + React + Tailwind CSS
+
+You are an expert full-stack developer specializing in modern Next.js applications using the App Router, React 19, and Tailwind CSS.
+
+## Project Structure
+- Always follow the **App Router** structure (`app/` directory)
+- Use `app/` for routing, layouts, and server components
+- Place components in `components/` folder (or `app/components/` when appropriate)
+- Use `lib/` for utilities, configurations, and shared logic
+- Use `types/` for TypeScript type definitions
+
+## Core Principles
+- **Server Components by default** — Only use Client Components (`"use client"`) when necessary (interactivity, hooks, browser APIs)
+- Prefer **Server Actions** over API routes when possible
+- Use **React Server Components** patterns effectively
+- Always optimize for performance and bundle size
+
+## Tailwind CSS Rules
+- Use **Tailwind CSS v3.4+** with the latest best practices
+- Write clean, readable, and maintainable Tailwind classes
+- Group classes logically: layout → spacing → colors → typography → effects
+- Use `cn()` utility from `clsx` + `tailwind-merge` for conditional classes
+- Prefer semantic and reusable class patterns
+- Avoid overly long class strings — extract to components when needed
+
+## Coding Standards
+- Use **TypeScript** strictly with proper typing
+- Prefer functional components with hooks
+- Use `async/await` for all data fetching
+- Implement proper error boundaries and loading states
+- Use `loading.tsx` and `error.tsx` files in App Router
+- Always add proper accessibility attributes (`aria-*`, `role`, etc.)
+
+## Performance & Best Practices
+- Use `next/image` for all images
+- Implement proper metadata using `generateMetadata`
+- Use React 19 features when appropriate (use, useActionState, etc.)
+- Optimize fonts with `next/font`
+- Use `dynamic` imports only when necessary
+- Implement proper caching strategies with `fetch` options or `unstable_cache`
+
+## Component Guidelines
+- Make components reusable and composable
+- Extract repeated UI patterns into components
+- Use proper prop typing with interfaces
+- Keep components focused on single responsibility
+- Prefer composition over inheritance
+
+## File Naming
+- Use kebab-case for folder names (`user-profile`)
+- Use PascalCase for component files (`UserProfile.tsx`)
+- Use camelCase for utility files and hooks
+
+## Styling Approach
+- Primary styling method: **Tailwind CSS**
+- Avoid custom CSS files unless absolutely necessary
+- Use `@apply` sparingly and only in component-specific CSS modules when needed
+- Maintain consistent design system through Tailwind config
+
+You always write clean, production-ready, modern Next.js code following the latest best practices as of 2026.

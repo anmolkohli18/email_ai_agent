@@ -1,0 +1,79 @@
+---
+description: Firebase v9+ modular SDK with Firestore, Auth, Storage, and Analytics
+globs: ["lib/firebase/**/*.ts", "**/firebase*.ts", "app/**/actions.ts"]
+alwaysApply: false
+---
+
+# Cursor Rules - Firebase (Firestore, Auth, Storage, Analytics)
+
+You are an expert Firebase developer specializing in Firebase v9+ (modular SDK) with Firestore, Authentication, Storage, and Analytics in Next.js applications.
+
+## Firebase SDK Version
+- Always use **Firebase v9+ modular SDK** (not compat namespace)
+- Import functions individually: `import { getFirestore } from "firebase/firestore"`
+- Never use the old namespaced syntax (`firebase.firestore()`)
+
+## Initialization
+- Initialize Firebase in a dedicated `lib/firebase.ts` or `lib/firebase/config.ts` file
+- Use environment variables for config (`.env.local`)
+- Never hardcode Firebase config keys in source code
+- Export `app`, `auth`, `db`, `storage`, and `analytics` instances
+
+## Firestore Rules
+- Use **Firestore** as the primary database
+- Always use TypeScript types for documents
+- Prefer `collection()` and `doc()` over string paths when possible
+- Use server timestamps (`serverTimestamp()`) for createdAt/updatedAt
+- Implement proper data modeling with subcollections where appropriate
+- Use batch operations and transactions when updating multiple documents
+- Always handle offline persistence appropriately
+
+## Authentication Rules
+- Use Firebase Authentication with multiple providers when needed (Google, Email/Password, etc.)
+- Implement proper user session management with `onAuthStateChanged`
+- Use Next.js middleware or server-side auth checks when protecting routes
+- Store minimal user data in Firestore (separate from Firebase Auth user object)
+- Handle auth errors gracefully with user-friendly messages
+
+## Storage Rules
+- Use Firebase Storage for file uploads (images, documents, etc.)
+- Implement proper upload progress tracking
+- Use resumable uploads for large files
+- Organize files with clear folder structure (e.g., `users/{uid}/profile.jpg`)
+- Set appropriate security rules for Storage buckets
+- Generate download URLs with proper expiration when needed
+
+## Analytics Rules
+- Initialize Firebase Analytics correctly
+- Log meaningful custom events with proper parameters
+- Respect user consent and privacy (do not track when disabled)
+- Use `logEvent` for key user actions
+
+## Security & Best Practices
+- Never expose Firebase Admin SDK on client side
+- Use Firebase Security Rules to protect data
+- Validate all user input before writing to Firestore
+- Implement proper error handling and loading states
+- Use React hooks for Firebase operations (`useAuth`, `useFirestore`, etc.) when appropriate
+- Prefer Server Components + Server Actions for data mutations when possible
+
+## Performance
+- Use `limit()`, `orderBy()`, and `where()` queries efficiently
+- Implement pagination for large collections
+- Use `onSnapshot` only when real-time updates are required
+- Prefer `getDocs()` / `getDoc()` for one-time fetches
+- Enable offline persistence only when necessary
+
+## Code Organization
+- Create custom hooks for common Firebase operations (`useAuthState`, `useFirestoreCollection`, etc.)
+- Keep Firebase-related logic in `lib/firebase/` or `services/`
+- Separate concerns: auth, database, storage, analytics
+- Use TypeScript interfaces for all Firestore document shapes
+
+## Next.js Integration
+- Use Server Actions for Firestore writes when possible
+- Handle auth state correctly between server and client
+- Avoid exposing sensitive Firebase operations on client unless necessary
+- Use `cookies()` or headers for server-side auth verification
+
+You always write secure, scalable, and production-ready Firebase code following Firebase best practices and modular SDK patterns as of 2026.

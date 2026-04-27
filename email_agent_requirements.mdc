@@ -1,0 +1,416 @@
+# Email Agent – MDX Functional Specification
+
+## 1. Overview
+
+The Email Agent is an AI-powered system that enables users to:
+
+* Manage contacts and contact lists
+* Generate personalized emails using AI
+* Edit and format emails
+* Send emails in bulk with dynamic placeholders
+* Track performance via dashboards
+* Personalize emails per contact using user input or AI-driven research
+
+---
+
+## 2. Core Entities
+
+### 2.1 Contact
+
+```
+Contact {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  company?: string
+  customFields?: Record<string, string>
+  personalizationNotes?: string
+}
+```
+
+### 2.2 Contact List
+
+```
+ContactList {
+  id: string
+  name: string
+  contacts: Contact[]
+  createdAt: datetime
+}
+```
+
+### 2.3 Email Template
+
+```
+EmailTemplate {
+  id: string
+  name: string
+  subject: string
+  body: string (rich text / HTML / MDX)
+  placeholders: string[]  // e.g. {{firstName}}, {{company}}
+  createdAt: datetime
+}
+```
+
+### 2.4 Email Campaign
+
+```
+EmailCampaign {
+  id: string
+  name: string
+  templateId: string
+  contactListId: string
+  status: draft | scheduled | sent
+  createdAt: datetime
+}
+```
+
+### 2.5 Email Log
+
+```
+EmailLog {
+  id: string
+  campaignId: string
+  contactId: string
+  subject: string
+  body: string
+  status: sent | failed | opened | clicked
+  timestamp: datetime
+}
+```
+
+---
+
+## 3. Features
+
+## 3.1 Contact Management
+
+### Capabilities
+
+* Create / edit / delete contacts
+* Import contacts (CSV upload)
+* Add custom fields per contact
+* Attach notes for personalization
+
+### UI Components
+
+* Contact Table
+* Contact Detail Panel
+* CSV Import Modal
+
+---
+
+## 3.2 Contact Lists
+
+### Capabilities
+
+* Create lists
+* Add/remove contacts
+* Bulk operations
+
+### UI Components
+
+* List Overview Page
+* List Detail Page
+
+---
+
+## 3.3 Email Generation (AI)
+
+### Pre-Generation Input Flow
+
+Before generating email, prompt user for:
+
+```
+{
+  purpose: string (e.g. sales, outreach, follow-up)
+  tone: formal | casual | persuasive
+  productDetails: string
+  CTA: string
+  additionalInstructions?: string
+}
+```
+
+### AI Generation
+
+* Generate:
+
+  * Subject
+  * Body (MDX / rich text)
+* Include placeholders:
+
+  * {{firstName}}
+  * {{lastName}}
+  * {{company}}
+  * Custom fields
+
+---
+
+## 3.4 Personalization Engine
+
+### Modes
+
+#### 1. Manual Personalization
+
+User inputs per-contact:
+
+```
+personalizationNotes
+customFields
+```
+
+#### 2. AI Research-Based Personalization
+
+User provides:
+
+```
+researchPrompt: string
+```
+
+System performs:
+
+* Fetch company/contact info (via APIs or scraping layer)
+* Generate insights:
+
+  * Recent news
+  * Role-based context
+  * Company summary
+
+AI generates:
+
+```
+personalizedSnippet(contact)
+```
+
+Inserted into email:
+
+```
+{{personalizedIntro}}
+```
+
+---
+
+## 3.5 Email Editor
+
+### Capabilities
+
+* Rich text editing (bold, italic, links)
+* MDX support
+* Placeholder insertion
+* Live preview with sample contact
+
+### UI Components
+
+* Editor (WYSIWYG + MDX toggle)
+* Placeholder Sidebar
+* Preview Panel
+
+---
+
+## 3.6 Bulk Email Sending
+
+### Flow
+
+1. Select Contact List
+2. Select Template
+3. Preview emails (sample + per contact)
+4. Send
+
+### Processing Logic
+
+For each contact:
+
+```
+email.body = replacePlaceholders(template.body, contact)
+email.body += personalizedSnippet(contact)
+sendEmail(email)
+logResult()
+```
+
+### Features
+
+* Rate limiting
+* Retry on failure
+* Email provider integration (SMTP / APIs)
+
+---
+
+## 3.7 Campaign Dashboard (Aggregated)
+
+### Metrics
+
+* Total Emails Sent
+* Delivery Rate
+* Open Rate
+* Click Rate
+* Failure Rate
+
+### Visuals
+
+* Time series charts
+* Funnel view
+
+---
+
+## 3.8 Campaign Detail Dashboard
+
+Per campaign:
+
+* List of contacts
+* Status per contact
+* Email preview per contact
+* Engagement tracking
+
+### Filters
+
+* Opened / Not Opened
+* Clicked
+* Failed
+
+---
+
+## 4. Placeholder System
+
+### Supported Placeholders
+
+```
+{{firstName}}
+{{lastName}}
+{{email}}
+{{company}}
+{{custom.<fieldName>}}
+{{personalizedIntro}}
+```
+
+### Engine
+
+```
+function replacePlaceholders(template, contact) {
+  // Replace standard fields
+  // Replace custom fields
+  // Inject personalization snippet
+}
+```
+
+---
+
+## 5. AI System Design
+
+### Components
+
+* Prompt Builder
+* Personalization Engine
+* Research Layer
+* Template Generator
+
+### Prompt Example
+
+```
+Generate a personalized outreach email:
+- Purpose: {purpose}
+- Tone: {tone}
+- Product: {productDetails}
+- Contact: {contactDetails}
+- Personalization: {researchInsights}
+
+Output:
+- Subject
+- Body with placeholders
+```
+
+---
+
+## 6. Permissions & Roles
+
+### Roles
+
+* Admin
+* User
+
+### Capabilities
+
+| Feature             | Admin | User    |
+| ------------------- | ----- | ------- |
+| Manage Contacts     | ✓     | ✓       |
+| Send Campaigns      | ✓     | ✓       |
+| View All Dashboards | ✓     | Limited |
+
+---
+
+## 7. API Design (High-Level)
+
+### Contacts
+
+```
+GET /contacts
+POST /contacts
+PUT /contacts/:id
+DELETE /contacts/:id
+```
+
+### Lists
+
+```
+GET /lists
+POST /lists
+```
+
+### Emails
+
+```
+POST /generate-email
+POST /send-campaign
+GET /campaigns
+GET /campaigns/:id
+```
+
+---
+
+## 8. Non-Functional Requirements
+
+### Performance
+
+* Handle 10k+ contacts per campaign
+
+### Reliability
+
+* Retry failed emails
+* Logging and audit trails
+
+### Security
+
+* Email encryption
+* Access control
+
+---
+
+## 9. Future Enhancements
+
+* A/B Testing for email variants
+* Smart send-time optimization
+* CRM integrations
+* Auto-follow-ups
+* Lead scoring
+
+---
+
+## 10. Success Metrics
+
+* Email open rate ↑
+* Response rate ↑
+* Campaign creation time ↓
+* Personalization depth ↑
+
+---
+
+## Summary
+
+This system is not just a bulk email sender — it's a **personalized outreach engine**:
+
+* Structured data (contacts + lists)
+* AI-powered generation
+* Deep personalization (manual + research-driven)
+* Full visibility (dashboards)
+
+If you build this well, it becomes a **mini outbound growth platform**, not just a tool.

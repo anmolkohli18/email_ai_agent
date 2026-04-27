@@ -1,0 +1,169 @@
+---
+description: Design system for UI components with colors, typography, spacing, and component standards
+globs: ["components/**/*.{ts,tsx}", "app/**/*.{ts,tsx}"]
+alwaysApply: true
+---
+
+# Design System - Premium Dark Theme
+
+You are building a premium, sophisticated web platform inspired by CRED's design language. Think dark, bold, exclusive, and minimalist. Always follow this design system for visual consistency and premium user experience.
+
+## Color Palette - Premium Dark Theme
+
+Use these exact color values when building UI components:
+
+### Primary Colors
+- **Background**: `#0D0D0D` → Use `bg-[#0D0D0D]` (Near black)
+- **Surface**: `#1A1A1A` → Use `bg-[#1A1A1A]` (Slightly lighter black)
+- **Surface Elevated**: `#232323` → Use `bg-[#232323]` (Cards, elevated surfaces)
+
+### Accent Colors
+- **Premium Gold**: `#FFC700` → Use `text-[#FFC700]` or `bg-[#FFC700]` (Primary accent)
+- **Gold Hover**: `#FFD700` → Use for hover states `hover:bg-[#FFD700]`
+- **Gold Muted**: `#8B7500` → Use for subtle gold elements
+
+### Category Colors (Vibrant against dark)
+- **AI Accent**: `#7C3AED` → Vibrant purple `bg-[#7C3AED]`
+- **Business Accent**: `#10B981` → Vibrant green `bg-[#10B981]`
+- **Technology Accent**: `#F59E0B` → Vibrant amber `bg-[#F59E0B]`
+
+### Text Colors
+- **Text Primary**: `#FFFFFF` → `text-white` (High contrast)
+- **Text Secondary**: `#A3A3A3` → `text-neutral-400` (Medium contrast)
+- **Text Muted**: `#525252` → `text-neutral-600` (Low contrast)
+
+### Borders & Dividers
+- **Border**: `#2A2A2A` → `border-[#2A2A2A]` (Subtle dark borders)
+- **Divider**: `#1F1F1F` → `border-[#1F1F1F]` (Very subtle)
+
+## Typography Scale - Bold & Premium
+
+Apply these text styles consistently. Typography should be BOLD, LARGE, and IMPACTFUL:
+
+- **Hero Heading**: `text-6xl md:text-7xl lg:text-8xl font-black leading-none tracking-tight` (Massive, 900 weight)
+- **Display**: `text-5xl md:text-6xl font-black leading-tight tracking-tight` (72px, 900 weight)
+- **Heading 1**: `text-4xl md:text-5xl font-bold leading-tight tracking-tight` (48px, 700 weight)
+- **Heading 2**: `text-3xl md:text-4xl font-bold leading-tight` (36px, 700 weight)
+- **Heading 3**: `text-2xl md:text-3xl font-semibold leading-snug` (28px, 600 weight)
+- **Body Large**: `text-xl leading-relaxed` (20px, 400 weight)
+- **Body**: `text-lg leading-relaxed` (18px, 400 weight)
+- **Body Small**: `text-base leading-normal` (16px, 400 weight)
+- **Caption**: `text-sm leading-tight tracking-wide uppercase` (14px, uppercase)
+- **Button Text**: `text-base font-semibold tracking-wide` (16px, 600 weight)
+
+Font family: Use Tailwind's font-sans with -apple-system for that premium feel.
+
+## Spacing Scale
+
+Use consistent spacing based on 8px base unit:
+
+- `p-1` (4px), `p-2` (8px), `p-3` (12px), `p-4` (16px), `p-5` (20px), `p-6` (24px)
+- `p-8` (32px), `p-10` (40px), `p-12` (48px), `p-16` (64px), `p-20` (80px)
+
+### Section Padding
+- Desktop: `py-16` (64px)
+- Tablet: `py-12` (48px)
+- Mobile: `py-8` (32px)
+
+### Container
+- Max width: `max-w-7xl` (1280px)
+- Side padding: `px-6` (24px)
+- Center: `mx-auto`
+
+## Component Patterns - Premium & Minimal
+
+### Buttons
+
+**Primary Button (Gold)**:
+```tsx
+<button className="bg-[#FFC700] hover:bg-[#FFD700] text-black font-bold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-[#FFC700]/20">
+```
+
+**Secondary Button (Outline)**:
+```tsx
+<button className="bg-transparent border-2 border-[#FFC700] text-[#FFC700] hover:bg-[#FFC700] hover:text-black font-semibold px-8 py-4 rounded-full transition-all duration-300">
+```
+
+**Ghost Button**:
+```tsx
+<button className="bg-[#1A1A1A] hover:bg-[#232323] text-white font-semibold px-6 py-3 rounded-full transition-all duration-300">
+```
+
+### Cards
+
+```tsx
+<div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-3xl p-8 hover:border-[#FFC700]/30 transition-all duration-500 hover:-translate-y-1">
+```
+
+- Border radius: `rounded-3xl` (24px) for premium curved look
+- Internal padding: `p-8` (32px) - generous spacing
+- Border: Subtle `border-[#2A2A2A]`
+- Hover: Lift up `hover:-translate-y-1` and gold border glow
+
+### Inputs and Forms
+
+```tsx
+<input className="border border-slate-200 focus:border-[#0056D2] focus:ring-2 focus:ring-[#0056D2]/20 rounded-lg px-4 py-3.5 transition-colors duration-200" />
+```
+
+**Labels**: `text-sm font-medium mb-1.5`
+**Placeholders**: `placeholder:text-slate-400`
+
+### Navigation Header
+
+```tsx
+<header className="bg-white border-b border-slate-200">
+  <nav className="max-w-7xl mx-auto px-6 py-4">
+```
+
+- Menu links: `hover:text-[#0056D2] transition-colors duration-200 hover:underline`
+- Logo: `font-bold text-xl`
+
+### Other Elements
+
+**Badges/Tags**:
+```tsx
+<span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-md text-sm">
+```
+
+**Icons**: Default 24px (`w-6 h-6`), 2px stroke
+**Dividers**: `border-t border-slate-100`
+**Avatars**: `rounded-full w-10 h-10`
+
+## Effects & Transitions
+
+- **Border Radius**: Default `rounded-lg` (8px) for interactive elements
+- **Shadows**: 
+  - Soft: `shadow-sm`
+  - Medium: `shadow-md`
+  - Card: `shadow-md hover:shadow-lg`
+- **Transitions**: `transition-all duration-200 ease-in-out`
+- **Hover scales**: `hover:scale-[1.02]` for subtle lift
+
+## Accessibility Requirements
+
+- Maintain **4.5:1 contrast ratio** minimum for all text
+- Touch targets: Minimum `44px` height (`py-3` or larger for buttons)
+- Focus indicators: Always visible with `focus:ring-2 focus:ring-[#0056D2]/20 focus:border-[#0056D2]`
+- Use semantic HTML and proper ARIA attributes
+
+## Responsive Behavior
+
+- **Mobile-first**: Start with mobile layout, enhance for larger screens
+- **Breakpoints**: Use `sm:`, `md:`, `lg:` prefixes
+  - Mobile: 0-640px (default)
+  - Tablet: 641-1024px (`md:`)
+  - Desktop: 1025px+ (`lg:`)
+
+## Design Principles - The CRED Way
+
+- **Dark & Premium**: Black backgrounds create sophistication and exclusivity
+- **Bold Typography**: Large, impactful text that commands attention
+- **Generous Whitespace**: Lots of breathing room - less is more
+- **Gold Accents**: Strategic use of gold (#FFC700) for emphasis and CTAs
+- **Subtle Interactions**: Smooth animations and micro-interactions
+- **Minimalist**: Remove everything unnecessary - focus on content
+- **Exclusive Feel**: "Not everyone gets it" - premium, members-only vibe
+- **Curved Corners**: Use large border radius (rounded-3xl) for modern organic feel
+
+Always reference the complete design system documentation at `design.md` for detailed specifications.
