@@ -320,3 +320,131 @@ export async function checkDuplicateEmail(
     return false;
   }
 }
+
+/**
+ * Bulk create contacts from CSV import
+ */
+export async function bulkCreateContacts(
+  userId: string,
+  contactsData: ContactFormData[]
+): Promise<{
+  success: boolean;
+  created?: number;
+  skipped?: number;
+  errors?: string[];
+  duplicates?: string[];
+}> {
+  try {
+    if (!db) {
+      return { success: false, errors: ['Firestore is not initialized'] };
+    }
+
+    if (contactsData.length === 0) {
+      return {
+        success: false,
+        errors: ['No contacts to import'],
+      };
+    }
+
+    const contactsRef = getContactsCollection(userId);
+    const now = Timestamp.now();
+
+    // Get existing emails to check for duplicates
+    const existingEmails = await getExistingEmails(userId);
+    const emailSet = new Set(existingEmails.map((e) => e.toLowerCase()));
+
+    const errors: string[] = [];
+    const duplicates: string[] = [];
+    let created = 0;
+    let skipped = 0;
+
+    // Process in batches to avoid overwhelming Firestore
+    const batchSize = 100;
+    for (let i = 0; i < contactsData.length; i += batchSize) {
+      const batch = contactsData.slice(i, i + batchSize);
+
+      const promises = batch.map(async (contactData, index) => {
+        const rowNumber = i + index + 1;
+        const emailLower = contactData.email.toLowerCase();
+
+        // Check for duplicates
+        if (emailSet.has(emailLower)) {
+          duplicates.push(
+            `Row ${rowNumber}: Email "${contactData.email}" already exists`
+          );
+          return { success: false, isDuplicate: true };
+        }
+
+        try {
+          // Add to Firestore
+          const newContactData = {
+            ...contactData,
+            userId,
+            createdAt: now,
+            updatedAt: now,
+          };
+
+          await addDoc(contactsRef, newContactData);
+
+          // Add to email set to prevent duplicates within the import
+          emailSet.add(emailLower);
+
+          return { success: true };
+        } catch (error: any) {
+          errors.push(
+            `Row ${rowNumber}: Failed to create contact - ${error.message}`
+          );
+          return { success: false };
+        }
+      });
+
+      const results = await Promise.all(promises);
+
+      results.forEach((result) => {
+        if (result.success) {
+          created++;
+        } else if (result.isDuplicate) {
+          skipped++;
+        } else {
+          skipped++;
+        }
+      });
+    }
+
+    const hasErrors = errors.length > 0 || duplicates.length > 0;
+    const allErrors = [...errors, ...duplicates];
+
+    return {
+      success: created > 0,
+      created,
+      skipped,
+      errors: hasErrors ? allErrors : undefined,
+      duplicates: duplicates.length > 0 ? duplicates : undefined,
+    };
+  } catch (error: any) {
+    console.error('Error bulk creating contacts:', error);
+    return {
+      success: false,
+      errors: [error.message || 'Failed to bulk create contacts'],
+    };
+  }
+}
+
+/**
+ * Get all existing emails for duplicate checking
+ */
+async function getExistingEmails(userId: string): Promise<string[]> {
+  try {
+    if (!db) {
+      return [];
+    }
+
+    const contactsRef = getContactsCollection(userId);
+    const snapshot = await getDocs(contactsRef);
+
+    return snapshot.docs.map((doc) => doc.data().email as string);
+  } catch (error) {
+    console.error('Error fetching existing emails:', error);
+    return [];
+  }
+}

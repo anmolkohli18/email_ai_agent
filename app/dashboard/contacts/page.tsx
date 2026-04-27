@@ -9,12 +9,14 @@ import {
   updateContact,
   deleteContact,
   searchContacts,
+  bulkCreateContacts,
 } from '@/lib/firebase/contacts';
 import { Contact, ContactFormData } from '@/types/contact';
 import ContactTable from '@/components/contacts/ContactTable';
 import ContactFormModal from '@/components/contacts/ContactFormModal';
 import DeleteContactModal from '@/components/contacts/DeleteContactModal';
 import EmptyContactsState from '@/components/contacts/EmptyContactsState';
+import CSVImportModal from '@/components/contacts/CSVImportModal';
 
 export default function ContactsPage() {
   const { user, loading: authLoading } = useAuth();
@@ -28,6 +30,7 @@ export default function ContactsPage() {
   // Modal states
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
 
@@ -143,6 +146,29 @@ export default function ContactsPage() {
     }
   };
 
+  const handleImportContacts = async (contactsToImport: ContactFormData[]) => {
+    if (!user) return;
+
+    setError('');
+    setSuccessMessage('');
+
+    const result = await bulkCreateContacts(user.uid, contactsToImport);
+
+    if (result.success && result.created && result.created > 0) {
+      let message = `Successfully imported ${result.created} contact${result.created > 1 ? 's' : ''}`;
+      if (result.skipped && result.skipped > 0) {
+        message += `, skipped ${result.skipped} duplicate${result.skipped > 1 ? 's' : ''}`;
+      }
+      setSuccessMessage(message);
+      loadContacts();
+      setTimeout(() => setSuccessMessage(''), 5000);
+    } else {
+      setError(
+        result.errors?.[0] || 'Failed to import contacts. All emails may already exist.'
+      );
+    }
+  };
+
   if (authLoading || (loading && contacts.length === 0)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -214,6 +240,25 @@ export default function ContactsPage() {
                 </svg>
               </div>
               <button
+                onClick={() => setIsImportModalOpen(true)}
+                className="px-6 py-4 bg-[#232323] hover:bg-[#2A2A2A] text-white font-semibold rounded-2xl transition-all duration-300 border border-[#2A2A2A] hover:border-[#FFC700]/30 whitespace-nowrap flex items-center gap-2"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                  />
+                </svg>
+                Import CSV
+              </button>
+              <button
                 onClick={handleAddContact}
                 className="px-8 py-4 bg-[#FFC700] hover:bg-[#FFD700] text-black font-bold rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-[#FFC700]/20 whitespace-nowrap"
               >
@@ -260,6 +305,12 @@ export default function ContactsPage() {
           onClose={() => setIsDeleteModalOpen(false)}
           onConfirm={handleConfirmDelete}
           contact={selectedContact}
+        />
+
+        <CSVImportModal
+          isOpen={isImportModalOpen}
+          onClose={() => setIsImportModalOpen(false)}
+          onImport={handleImportContacts}
         />
       </div>
     </div>
