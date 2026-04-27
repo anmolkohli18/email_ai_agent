@@ -48,26 +48,27 @@ service cloud.firestore {
         allow update, delete: if isAuthenticated() && isOwner(userId);
       }
       
-      // Email Templates subcollection (future feature)
-      match /email_templates/{templateId} {
+      // Email Templates subcollection
+      match /emailTemplates/{templateId} {
         allow read: if isAuthenticated() && isOwner(userId);
         allow create: if isAuthenticated() && isOwner(userId) && 
                          request.resource.data.userId == userId;
         allow update, delete: if isAuthenticated() && isOwner(userId);
       }
       
-      // Email Campaigns subcollection (future feature)
-      match /email_campaigns/{campaignId} {
+      // Email Campaigns subcollection
+      match /emailCampaigns/{campaignId} {
         allow read: if isAuthenticated() && isOwner(userId);
         allow create: if isAuthenticated() && isOwner(userId) && 
                          request.resource.data.userId == userId;
         allow update, delete: if isAuthenticated() && isOwner(userId);
       }
       
-      // Email Logs subcollection (future feature)
-      match /email_logs/{logId} {
+      // Email Logs subcollection
+      match /emailLogs/{logId} {
         allow read: if isAuthenticated() && isOwner(userId);
-        allow create: if isAuthenticated() && isOwner(userId);
+        allow create: if isAuthenticated() && isOwner(userId) && 
+                         request.resource.data.userId == userId;
       }
     }
   }

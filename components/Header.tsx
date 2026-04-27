@@ -38,6 +38,8 @@ export default function Header() {
   const dashboardLinks = user ? [
     { href: '/dashboard', label: 'DASHBOARD' },
     { href: '/dashboard/contacts', label: 'CONTACTS' },
+    { href: '/dashboard/templates', label: 'TEMPLATES' },
+    { href: '/dashboard/campaigns', label: 'CAMPAIGNS' },
   ] : [];
 
   const allLinks = [...navLinks, ...dashboardLinks];
@@ -126,9 +128,30 @@ export default function Header() {
                         >
                           Dashboard
                         </Link>
+                        <Link
+                          href="/dashboard/contacts"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="block px-4 py-3 text-sm text-white hover:bg-[#232323] transition-colors"
+                        >
+                          Contacts
+                        </Link>
+                        <Link
+                          href="/dashboard/templates"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="block px-4 py-3 text-sm text-white hover:bg-[#232323] transition-colors"
+                        >
+                          Templates
+                        </Link>
+                        <Link
+                          href="/dashboard/campaigns"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="block px-4 py-3 text-sm text-white hover:bg-[#232323] transition-colors"
+                        >
+                          Campaigns
+                        </Link>
                         <button
                           onClick={handleSignOut}
-                          className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-[#232323] transition-colors"
+                          className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-[#232323] transition-colors border-t border-[#2A2A2A]"
                         >
                           Sign Out
                         </button>
