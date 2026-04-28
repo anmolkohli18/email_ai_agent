@@ -14,6 +14,9 @@ export default function Header() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
+  // Check if we're on a dashboard page
+  const isDashboardPage = pathname.startsWith('/dashboard');
+
   // Close user menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -38,6 +41,7 @@ export default function Header() {
   const dashboardLinks = user ? [
     { href: '/dashboard', label: 'DASHBOARD' },
     { href: '/dashboard/contacts', label: 'CONTACTS' },
+    { href: '/dashboard/lists', label: 'LISTS' },
     { href: '/dashboard/templates', label: 'TEMPLATES' },
     { href: '/dashboard/campaigns', label: 'CAMPAIGNS' },
   ] : [];
@@ -54,6 +58,11 @@ export default function Header() {
     setUserMenuOpen(false);
     router.push('/');
   };
+
+  // Hide header on dashboard pages (sidebar handles navigation)
+  if (isDashboardPage && user) {
+    return null;
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-[#0D0D0D]/80 backdrop-blur-xl border-b border-[#2A2A2A]">
@@ -134,6 +143,13 @@ export default function Header() {
                           className="block px-4 py-3 text-sm text-white hover:bg-[#232323] transition-colors"
                         >
                           Contacts
+                        </Link>
+                        <Link
+                          href="/dashboard/lists"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="block px-4 py-3 text-sm text-white hover:bg-[#232323] transition-colors"
+                        >
+                          Lists
                         </Link>
                         <Link
                           href="/dashboard/templates"

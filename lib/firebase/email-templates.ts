@@ -12,7 +12,7 @@ import {
   Query,
   DocumentData,
 } from 'firebase/firestore';
-import { db } from '../config';
+import { db } from './config';
 import {
   EmailTemplate,
   EmailTemplateFormData,

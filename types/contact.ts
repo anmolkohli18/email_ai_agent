@@ -25,3 +25,23 @@ export interface ContactFilters {
   sortBy?: 'firstName' | 'lastName' | 'email' | 'company' | 'createdAt';
   sortOrder?: 'asc' | 'desc';
 }
+
+export interface ContactList {
+  id: string;
+  name: string;
+  description?: string;
+  contactIds: string[];
+  contactCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+}
+
+export interface ContactListFormData {
+  name: string;
+  description?: string;
+}
+
+export interface ContactListWithContacts extends ContactList {
+  contacts: Contact[];
+}
