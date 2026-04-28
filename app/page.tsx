@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import PublicLayout from '@/components/PublicLayout';
+import AIFeatureShowcase from '@/components/AIFeatureShowcase';
 
 export const metadata: Metadata = {
   title: 'AI-Powered Email Personalization Platform | Scale Your Outreach',
@@ -47,6 +48,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* AI Feature Showcase */}
+      <AIFeatureShowcase />
 
       {/* Problem Statement */}
       <section className="py-16 px-6 lg:px-12">
