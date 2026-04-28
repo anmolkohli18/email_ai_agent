@@ -14,15 +14,16 @@ import { getContacts } from '@/lib/firebase/contacts';
 import { ContactListWithContacts, Contact } from '@/types/contact';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function ContactListDetailPage({ params }: PageProps) {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
 
+  const [listId, setListId] = useState<string | null>(null);
   const [list, setList] = useState<ContactListWithContacts | null>(null);
   const [allContacts, setAllContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,6 +36,13 @@ export default function ContactListDetailPage({ params }: PageProps) {
   );
   const [isAddContactsModalOpen, setIsAddContactsModalOpen] = useState(false);
 
+  // Resolve params
+  useEffect(() => {
+    params.then((resolvedParams) => {
+      setListId(resolvedParams.id);
+    });
+  }, [params]);
+
   // Redirect if not authenticated
   useEffect(() => {
     if (!authLoading && !user) {
@@ -44,17 +52,17 @@ export default function ContactListDetailPage({ params }: PageProps) {
 
   // Load list and all contacts
   useEffect(() => {
-    if (user) {
+    if (user && listId) {
       loadList();
       loadAllContacts();
     }
-  }, [user, params.id]);
+  }, [user, listId]);
 
   const loadList = async () => {
-    if (!user) return;
+    if (!user || !listId) return;
 
     setLoading(true);
-    const result = await getContactListWithContacts(user.uid, params.id);
+    const result = await getContactListWithContacts(user.uid, listId);
 
     if (result.success && result.list) {
       setList(result.list);
