@@ -21,6 +21,9 @@ export async function sendEmail(
       emailBodyHtml: htmlBody,
     };
 
+    console.log('🚀 Sending email to:', to);
+    console.log('📧 API Endpoint:', EMAIL_API_URL);
+
     const response = await fetch(EMAIL_API_URL, {
       method: 'POST',
       headers: {
@@ -29,18 +32,39 @@ export async function sendEmail(
       body: JSON.stringify(request),
     });
 
+    console.log('📬 API Response Status:', response.status);
+
     if (!response.ok) {
-      throw new Error(`Email API returned ${response.status}`);
+      // Try to get error details from response
+      let errorDetails = '';
+      try {
+        const errorText = await response.text();
+        console.error('❌ API Error Response:', errorText.substring(0, 500));
+        errorDetails = errorText.substring(0, 200);
+      } catch (e) {
+        errorDetails = 'Could not read error response';
+      }
+
+      throw new Error(
+        `Email API returned ${response.status}: ${errorDetails || 'Server error'}`
+      );
     }
 
     const data = await response.json();
+    console.log('✅ Email sent successfully:', data.messageId);
 
     return {
       messageId: data.messageId,
       success: true,
     };
   } catch (error: any) {
-    console.error('Error sending email:', error);
+    console.error('❌ Error sending email:', error);
+    console.error('Error details:', {
+      message: error.message,
+      to,
+      subject,
+    });
+
     return {
       messageId: '',
       success: false,
