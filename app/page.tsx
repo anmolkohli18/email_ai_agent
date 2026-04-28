@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import PublicLayout from '@/components/PublicLayout';
 
 export const metadata: Metadata = {
   title: 'AI-Powered Email Personalization Platform | Scale Your Outreach',
@@ -14,7 +15,8 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <PublicLayout>
+      <main className="min-h-screen">
       {/* Hero Section */}
       <section className="relative py-24 lg:py-32 px-6 lg:px-12 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#1A1A1A] to-[#0D0D0D] opacity-50" />
@@ -265,5 +267,6 @@ export default function Home() {
         </div>
       </section>
     </main>
+    </PublicLayout>
   );
 }

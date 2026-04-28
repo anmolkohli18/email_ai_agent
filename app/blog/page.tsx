@@ -1,5 +1,6 @@
 import { getAllPosts } from '@/lib/posts';
 import BlogListingClient from './BlogListingClient';
+import PublicLayout from '@/components/PublicLayout';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,5 +11,9 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   const posts = getAllPosts();
 
-  return <BlogListingClient posts={posts} />;
+  return (
+    <PublicLayout>
+      <BlogListingClient posts={posts} />
+    </PublicLayout>
+  );
 }

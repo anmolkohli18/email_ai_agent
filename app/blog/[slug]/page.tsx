@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getAllPostSlugs, getPostBySlug, generateTableOfContents } from '@/lib/posts';
 import TableOfContents from '@/components/TableOfContents';
+import PublicLayout from '@/components/PublicLayout';
 import { format } from 'date-fns';
 import type { Metadata } from 'next';
 import ReactMarkdown from 'react-markdown';
@@ -67,7 +68,8 @@ export default async function BlogPostPage({ params }: PageProps) {
   };
 
   return (
-    <article className="max-w-7xl mx-auto px-6 py-16">
+    <PublicLayout>
+      <article className="max-w-7xl mx-auto px-6 py-16">
       <div className="max-w-5xl mx-auto">
         {/* Article Header */}
         <header className="mb-16">
@@ -178,5 +180,6 @@ export default async function BlogPostPage({ params }: PageProps) {
         }}
       />
     </article>
+    </PublicLayout>
   );
 }

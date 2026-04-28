@@ -1,10 +1,19 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/firebase/auth-context';
+import { signOut } from '@/lib/firebase/auth';
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/');
+  };
 
   const navItems = [
     {
@@ -98,18 +107,44 @@ export default function DashboardSidebar() {
         ))}
       </nav>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-[#2A2A2A]">
-        <div className="p-4 bg-[#1A1A1A] rounded-xl border border-[#2A2A2A]">
-          <p className="text-xs text-neutral-400 mb-2">Need help?</p>
-          <Link
-            href="/"
-            className="text-sm text-[#FFC700] hover:text-[#FFD700] font-semibold transition-colors"
+      {/* User Profile and Sign Out */}
+      {user && (
+        <div className="p-4 border-t border-[#2A2A2A] space-y-3">
+          {/* User Info */}
+          <div className="flex items-center gap-3 px-4 py-3 bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl">
+            {user.photoURL ? (
+              <img
+                src={user.photoURL}
+                alt={user.displayName || 'User'}
+                className="w-8 h-8 rounded-full"
+              />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-[#FFC700] flex items-center justify-center text-black text-sm font-bold">
+                {user.email?.[0].toUpperCase()}
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-white text-sm font-semibold truncate">
+                {user.displayName || user.email?.split('@')[0]}
+              </p>
+              <p className="text-neutral-500 text-xs truncate">
+                {user.email}
+              </p>
+            </div>
+          </div>
+
+          {/* Sign Out Button */}
+          <button
+            onClick={handleSignOut}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#1A1A1A] hover:bg-red-900/20 text-neutral-400 hover:text-red-400 border border-[#2A2A2A] hover:border-red-900/50 rounded-xl transition-all duration-200"
           >
-            Visit Help Center →
-          </Link>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span className="text-sm font-semibold">Sign Out</span>
+          </button>
         </div>
-      </div>
+      )}
     </aside>
   );
 }

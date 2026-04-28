@@ -11,6 +11,7 @@ import {
 } from '@/lib/firebase/email-templates';
 import { EmailTemplate, EmailTemplateFormData } from '@/types/email';
 import TemplateEditorModal from '@/components/templates/TemplateEditorModal';
+import AIEmailGeneratorModal from '@/components/templates/AIEmailGeneratorModal';
 
 export default function EmailTemplatesPage() {
   const { user, loading: authLoading } = useAuth();
@@ -19,6 +20,7 @@ export default function EmailTemplatesPage() {
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
   const [selectedTemplate, setSelectedTemplate] = useState<EmailTemplate | null>(null);
@@ -155,7 +157,16 @@ export default function EmailTemplatesPage() {
         )}
 
         {/* Action Bar */}
-        <div className="mb-6 flex justify-end">
+        <div className="mb-6 flex gap-4 justify-end">
+          <button
+            onClick={() => setIsAIModalOpen(true)}
+            className="px-6 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg flex items-center gap-2"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            ✨ Generate with AI
+          </button>
           <button
             onClick={handleAddTemplate}
             className="px-8 py-4 bg-[#FFC700] hover:bg-[#FFD700] text-black font-bold rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-[#FFC700]/20"
@@ -276,6 +287,13 @@ export default function EmailTemplatesPage() {
           onSave={handleFormSubmit}
           template={selectedTemplate}
           mode={modalMode}
+        />
+
+        {/* AI Email Generator Modal */}
+        <AIEmailGeneratorModal
+          isOpen={isAIModalOpen}
+          onClose={() => setIsAIModalOpen(false)}
+          onGenerate={handleFormSubmit}
         />
 
         {/* Delete Confirmation Modal */}
